@@ -1,5 +1,6 @@
 import { Application } from "express";
 import { onboardingRoutes } from "../modules/onboarding/routes/api";
+import { NotFound } from "../base/middleware/global/NotFound";
 
 class RouteRegistar {
 
@@ -11,7 +12,8 @@ class RouteRegistar {
     }
 
     private registerRoutes():void {
-        this.app.use("/onboarding", onboardingRoutes);
+        this.app.use("/api/v1/onboarding", onboardingRoutes);
+        this.app.use(NotFound)
     }
 
 

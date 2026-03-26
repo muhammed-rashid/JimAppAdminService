@@ -1,4 +1,5 @@
 
+import { globalErrorHandler } from "../base/middleware/global/ErrorMiddleware";
 import MiddlewareRegistar from "./MiddlewareRegistar";
 import RouteRegistar from "./RouteRegistar";
 import express, { Application } from "express";
@@ -14,6 +15,8 @@ class App {
 
     new MiddlewareRegistar(this.app);
     new RouteRegistar(this.app);
+
+    this.app.use(globalErrorHandler);
 
   }
 

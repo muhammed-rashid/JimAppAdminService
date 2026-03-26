@@ -1,41 +1,36 @@
-import { Request, Response } from "express";
-import { OnboardingService } from "../Services/OnboardingService";
-import { IOnboardRequest } from "../interfaces/onboarding";
+import { NextFunction, Request, Response } from "express";
+import { singleton } from "tsyringe";
+import { OnboardingService } from "../services/OnboardingService";
+import { RegisterRequest } from "../interfaces/registerInterface";
+import { BaseController } from "../../../base/controller/BaseController";
+import { container } from "tsyringe";
 
-export class OnboardingController {
-  private service: OnboardingService;
-
-  constructor(service: OnboardingService) {
-    this.service = service;
+@singleton()
+class OnboardingController extends BaseController {
+  
+  constructor(private service: OnboardingService) {
+    super();
   }
 
-  public async handleOnboard(req: Request, res: Response): Promise<void> {
-    try {
-      console.log(`[Controller] Handling onboarding request for ${req.body.name}...`);
-      const payload: IOnboardRequest = req.body;
-      
-      // Validation basics
-      if (!payload.name || !payload.email) {
-        res.status(400).json({ success: false, message: "Name and email are required fields." });
-        return;
-      }
 
-      // Delegate to service
-      const result = await this.service.startProcess(payload);
+  public register = async (req: Request, res: Response, next: NextFunction): Promise<Response|void> => {
+    try {
+      const payload: RegisterRequest = req.body;
+      
+      throw new Error("Test error");
+
+      const result = await this.service.register(payload);
 
       if (!result.success) {
-        res.status(400).json(result);
-        return;
+        return this.errorResponse(res, result, 500);
       }
 
-      res.status(201).json(result);
+      return this.successResponse(res, result, 201);
     } catch (error: any) {
-      console.error(`[Controller Error]: ${error.message}`);
-      res.status(500).json({
-        success: false,
-        message: "Internal Server Error",
-        error: error.message,
-      });
+       next(error);
     }
   }
 }
+
+export const onboardingController = container.resolve(OnboardingController);
+
