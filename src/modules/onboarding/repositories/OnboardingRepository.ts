@@ -8,7 +8,7 @@ export class OnboardingRepository {
 
   public async register(userData: any): Promise<boolean> {
 
-   const user = await db.User.create({
+   const user = await db.user.create({
     data: {
       name:userData.name,
       email:userData.email
