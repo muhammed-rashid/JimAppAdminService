@@ -16,8 +16,7 @@ class OnboardingController extends BaseController {
   public register = async (req: Request, res: Response, next: NextFunction): Promise<Response|void> => {
     try {
       const payload: RegisterRequest = req.body;
-      
-      throw new Error("Test error");
+   
 
       const result = await this.service.register(payload);
 
