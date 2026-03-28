@@ -13,10 +13,11 @@ export class OnboardingService {
     data: any;
   }> {
 
-  this.repository.register(data);
+  const result = await this.repository.register(data);
+  
     return {
-      success: true,
-      message: "Registration successful",
+      success: result,
+      message: result ? "Registration successful" : "Registration failed",
       data: data
     };
   }
